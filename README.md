@@ -1,6 +1,9 @@
 
 # LogDog - Real-Time Log Anomaly Detector 🐾
 
+![logdog](https://github.com/user-attachments/assets/d0e44b9e-d32d-4d28-9a56-dcc39a1b82b1)
+
+
 LogDog is a Python-based real-time log monitoring and anomaly detection tool designed for Linux systems. It watches important log files like `/var/log/auth.log`, `/var/log/syslog`, and `/var/log/messages` to detect suspicious patterns such as brute-force SSH attacks or authentication anomalies.
 
 Created for defenders, sysadmins, and SOC analysts who want a simple but powerful alerting system for their logs.
