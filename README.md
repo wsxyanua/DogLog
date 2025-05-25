@@ -40,7 +40,7 @@ pip3 install watchdog termcolor
 1. Clone the repository or download the script.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/logdog.git
+git clone https://github.com/X3RX3SSec/LogDog.git
 cd logdog
 ```
 
@@ -182,5 +182,5 @@ MIT License. See `LICENSE` file for details.
 
 ## Author
 
-**LogDog** was developed by X3RX3S.  
-Contributions and pull requests are welcome!
+**LogDog** is writen by X3RX3S.  
+Contributions and pull requests are welcome! Or send me a DM on instagram @mindfuckerrrr
