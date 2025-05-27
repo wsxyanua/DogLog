@@ -150,9 +150,9 @@ if __name__ == "__main__":
         description="🔍 LogDog - Real-time Log Anomaly Detector by X3RX3S. Insta @mindfuckerrrr",
         epilog="""
 Examples:
-  python3 logsentinel.py --all
-  python3 logsentinel.py --logs /var/log/auth.log /var/log/syslog
-  python3 logsentinel.py --window 10 --threshold 7 --logs /var/log/secure
+  python3 logdog.py --all
+  python3 logdog.py --logs /var/log/auth.log /var/log/syslog
+  python3 logdog.py --window 10 --threshold 7 --logs /var/log/secure
 
 Options:
   --window     Number of minutes to track errors in sliding window
