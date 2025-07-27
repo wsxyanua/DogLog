@@ -27,22 +27,27 @@ Created for defenders, sysadmins, and SOC analysts who want a simple but powerfu
 
 ### Python Dependencies
 
-You can install dependencies in two ways:
+**⚠️ Important:** Modern Linux distributions (Ubuntu 22.04+, Debian 12+, Kali Linux) have externally managed Python environments. Choose one of the following installation methods:
 
-#### Recommended: Using a Virtual Environment (venv)
+#### Method 1: Global Installation (Recommended for quick setup)
 
 ```bash
+# Install dependencies globally
+sudo pip3 install watchdog termcolor
+
+# If you get "externally-managed-environment" error, use:
+sudo pip3 install --break-system-packages watchdog termcolor
+```
+
+#### Method 2: Virtual Environment (Recommended for development)
+
+```bash
+# Create and activate virtual environment
 sudo apt update
 sudo apt install python3-venv -y
 python3 -m venv venv
 source venv/bin/activate
 pip install watchdog termcolor
-```
-
-#### Or, install globally (not recommended on modern Linux):
-
-```bash
-pip3 install watchdog termcolor
 ```
 
 ---
@@ -53,7 +58,7 @@ pip3 install watchdog termcolor
 
     ```bash
     git clone https://github.com/wsxyanua/DogLog.git
-    cd logdog
+    cd DogLog
     ```
 
 2. Make it executable:
@@ -65,6 +70,37 @@ pip3 install watchdog termcolor
 ---
 
 ## Usage
+
+### ⚠️ Important: Running with sudo
+
+DogLog requires root privileges to access system log files. However, when running with `sudo`, Python may not find your virtual environment. Use one of these methods:
+
+#### Method 1: Global Dependencies (Simplest)
+
+```bash
+# Install dependencies globally first
+sudo pip3 install watchdog termcolor
+
+# Then run normally
+sudo python3 logdog.py --all
+```
+
+#### Method 2: Virtual Environment with sudo
+
+```bash
+# If using virtual environment, run with full path
+sudo -E env "PATH=$PATH" /path/to/venv/bin/python3 logdog.py --all
+```
+
+#### Method 3: Activate venv before sudo
+
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run with sudo while preserving environment
+sudo -E python3 logdog.py --all
+```
 
 ### Basic Usage
 
@@ -123,6 +159,32 @@ optional arguments:
 
 ---
 
+## Testing the Installation
+
+To verify DogLog is working correctly:
+
+1. **Start SSH service (if not running):**
+    ```bash
+    sudo systemctl start ssh
+    ```
+
+2. **Create test log events:**
+    ```bash
+    # Try SSH connections to generate auth logs
+    ssh -o ConnectTimeout=1 -o BatchMode=yes test@localhost
+    
+    # Or create a test log file
+    sudo touch /var/log/test.log
+    echo "$(date '+%Y-%m-%d %H:%M:%S') ERROR Test error message" | sudo tee -a /var/log/test.log
+    ```
+
+3. **Run DogLog and observe output:**
+    ```bash
+    sudo python3 logdog.py --logs /var/log/test.log
+    ```
+
+---
+
 ## Systemd Integration
 
 To run LogDog as a background service:
@@ -176,7 +238,20 @@ To run LogDog as a background service:
 ## Output Example
 
 ```text
-ANOMALY DETECTED in /var/log/auth.log: 6 ERRORs in last 0:05:00 at 2025-05-25 16:40:12
+      __                      ____
+     /\ \                    /\  _`\                     
+     \ \ \        ___      __\ \ \/\ \     / \__         __
+      \ \ \  __  / __`\  /'_ `\ \ \ \ \   (    @\___   /'_ `\   
+       \ \ \L\ \/\ \L\ \/\ \L\ \ \ \_\ \  /          O/\ \L\ \  
+        \ \____/\ \____/\ \____ \ \____/ /    (_____/ \ \____ \ 
+         \/___/  \/___/  \/___L\ \/___/ /_____/    U   \/___L\ \
+                           /\____/                       /\____/
+                           \_/__/                        \_/__/ 
+               Real-time Log Anomaly Detector by xyanua.
+
+👀 Monitoring logs: /var/log/auth.log, /var/log/syslog, /var/log/messages
+
+[!] ANOMALY DETECTED in /var/log/auth.log: 6 ERRORs in last 0:05:00 at 2025-07-28 03:32:18
 [!] Authentication failure from IP: 192.168.1.100
 [+] Successful login detected from IP: 192.168.1.42
 ```
@@ -185,10 +260,35 @@ ANOMALY DETECTED in /var/log/auth.log: 6 ERRORs in last 0:05:00 at 2025-05-25 16
 
 ## Troubleshooting
 
-- **Permission denied:** Make sure you run DogLog with `sudo` to access protected log files.
-- **No output:** Check that the log files exist and are being updated. Use the `--logs` option to specify custom log paths if needed.
-- **Dependency errors:** Ensure you have activated your virtual environment (if used) and installed all dependencies.
-- **Externally managed environment error:** Use a virtual environment as described above to avoid system Python restrictions on modern Linux distributions.
+### Common Issues and Solutions
+
+- **`ModuleNotFoundError: No module named 'watchdog'`**
+  - **Solution:** Install dependencies globally: `sudo pip3 install watchdog termcolor`
+  - **Alternative:** Use virtual environment with full path: `sudo -E env "PATH=$PATH" /path/to/venv/bin/python3 logdog.py --all`
+
+- **`Permission denied`**
+  - **Solution:** Make sure you run DogLog with `sudo` to access protected log files
+
+- **`No such file or directory` for log files**
+  - **Solution:** Check if log files exist: `sudo ls -la /var/log/auth.log`
+  - **Alternative:** Create test log file: `sudo touch /var/log/test.log`
+
+- **`Externally managed environment error`**
+  - **Solution:** Use `sudo pip3 install --break-system-packages watchdog termcolor`
+  - **Alternative:** Use virtual environment as described above
+
+- **No output from DogLog**
+  - **Solution:** Check that log files exist and are being updated
+  - **Test:** Create test events: `ssh -o ConnectTimeout=1 -o BatchMode=yes test@localhost`
+
+- **SSH service not running**
+  - **Solution:** Start SSH service: `sudo systemctl start ssh`
+
+### Modern Linux Distribution Notes
+
+- **Ubuntu 22.04+, Debian 12+, Kali Linux:** Use global installation or virtual environment with proper sudo handling
+- **Systemd-based systems:** Logs may be in journald instead of traditional log files
+- **Check available logs:** `sudo journalctl -u ssh --since "5 minutes ago"`
 
 ---
 
@@ -196,6 +296,7 @@ ANOMALY DETECTED in /var/log/auth.log: 6 ERRORs in last 0:05:00 at 2025-05-25 16
 
 - This tool requires root access for reading logs like `/var/log/auth.log` and for performing `iptables` blocking.
 - The auto-block feature must be used carefully. Always confirm IPs before blocking or enable optional confirmation prompts.
+- Consider running in a controlled environment when testing auto-blocking features.
 
 ---
 
