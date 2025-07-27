@@ -128,7 +128,7 @@ def show_banner():
          \/___/  \/___/  \/___L\ \/___/ /_____/    U   \/___L\ \
                            /\____/                       /\____/
                            \_/__/                        \_/__/ 
-               Real-time Log Anomaly Detector by X3RX3S
+               Real-time Log Anomaly Detector by xyanua.
 """
     print(f"{GREEN}{banner}{RESET}")
 
@@ -140,6 +140,9 @@ def get_all_default_logs():
         "/var/log/secure",
         "/var/log/faillog",
         "/var/log/kern.log",
+        "/var/log/wtmp",
+        "/var/log/btmp",
+        "/var/log/cron",
         "/var/log/dmesg"
     ]
 
@@ -147,7 +150,7 @@ if __name__ == "__main__":
     show_banner()
 
     parser = argparse.ArgumentParser(
-        description="🔍 LogDog - Real-time Log Anomaly Detector by X3RX3S. Insta @mindfuckerrrr",
+        description="🔍 LogDog - Real-time Log Anomaly Detector by xyanua.",
         epilog="""
 Examples:
   python3 logdog.py --all
