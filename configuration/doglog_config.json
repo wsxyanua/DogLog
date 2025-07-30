@@ -1,0 +1,50 @@
+{
+  "monitoring": {
+    "default_window_minutes": 5,
+    "default_error_threshold": 5,
+    "statistics_interval": 30,
+    "log_files": [
+      "/var/log/auth.log",
+      "/var/log/syslog",
+      "/var/log/messages",
+      "/var/log/secure",
+      "/var/log/faillog",
+      "/var/log/kern.log",
+      "/var/log/wtmp",
+      "/var/log/btmp",
+      "/var/log/cron",
+      "/var/log/dmesg"
+    ]
+  },
+  "alerts": {
+    "auto_block": false,
+    "email_enabled": false,
+    "thresholds": {
+      "brute_force": 10,
+      "suspicious_ip": 5,
+      "system_error": 20,
+      "user_failures": 3
+    },
+    "smtp": {
+      "server": "smtp.gmail.com",
+      "port": 587,
+      "from_email": "doglog@example.com",
+      "to_email": "admin@example.com",
+      "username": "your_username",
+      "password": "your_password"
+    }
+  },
+  "display": {
+    "show_statistics": true,
+    "show_ip_info": true,
+    "show_user_info": true,
+    "color_output": true,
+    "timestamp_format": "%H:%M:%S"
+  },
+  "security": {
+    "block_duration_hours": 24,
+    "whitelist_ips": [],
+    "blacklist_ips": [],
+    "rate_limit_per_minute": 60
+  }
+} 
